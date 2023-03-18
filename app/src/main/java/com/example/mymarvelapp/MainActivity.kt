@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mymarvelapp.data.Screen
 import com.example.mymarvelapp.ui.theme.MyMarvelAppTheme
+import com.example.mymarvelapp.view.screens.CharactersBottomNavigation
 import com.example.mymarvelapp.view.screens.CollectionScreen
 import com.example.mymarvelapp.view.screens.LibraryScreen
 
@@ -46,7 +47,7 @@ fun CharactersScaffold(navController: NavHostController) {
         topBar = {},
 
         bottomBar = {
-
+            CharactersBottomNavigation(navController = navController)
         }
     ) { paddingValues ->
 
@@ -59,7 +60,7 @@ fun CharactersScaffold(navController: NavHostController) {
                 CollectionScreen()
             }
 
-            composable(Screen.CharacterDetail.route){navBackStackEntry ->  
+            composable(Screen.CharacterDetail.route) { navBackStackEntry ->
 
             }
         }
