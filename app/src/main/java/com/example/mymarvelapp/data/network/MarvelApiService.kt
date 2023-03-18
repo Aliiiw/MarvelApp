@@ -25,7 +25,7 @@ object MarvelApiService {
 
             val url: HttpUrl = request.url.newBuilder()
                 .addQueryParameter("ts", timeStamp)
-                .addQueryParameter("apiKey", apiKey)
+                .addQueryParameter("apikey", apiKey)
                 .addQueryParameter("hash", hash)
                 .build()
 
