@@ -45,7 +45,9 @@ fun CharactersScaffold(navController: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {},
 
-        bottomBar = {}
+        bottomBar = {
+
+        }
     ) { paddingValues ->
 
         NavHost(navController = navController, startDestination = Screen.Library.route) {
@@ -58,7 +60,7 @@ fun CharactersScaffold(navController: NavHostController) {
             }
 
             composable(Screen.CharacterDetail.route){navBackStackEntry ->  
-                
+
             }
         }
 
