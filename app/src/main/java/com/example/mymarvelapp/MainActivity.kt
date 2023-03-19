@@ -81,7 +81,7 @@ fun CharactersScaffold(
             }
 
             composable(Screen.Collection.route) {
-                CollectionScreen()
+                CollectionScreen(cvm = collectionDbViewModel, navController = navController)
             }
 
             composable(Screen.CharacterDetail.route) { navBackStackEntry ->
