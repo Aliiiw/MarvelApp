@@ -1,7 +1,9 @@
 package com.example.mymarvelapp.viewmodel.repository
 
+import androidx.compose.runtime.mutableStateOf
 import com.example.mymarvelapp.data.network.MarvelApiInterface
 import com.example.mymarvelapp.data.network.NetworkResult
+import com.example.mymarvelapp.model.CharacterResult
 import com.example.mymarvelapp.model.CharactersApiResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.Call
@@ -10,6 +12,7 @@ import retrofit2.Response
 
 class MarvelApiRepo(private val api: MarvelApiInterface) {
     val characters = MutableStateFlow<NetworkResult<CharactersApiResponse>>(NetworkResult.Initial())
+    val characterDetails = mutableStateOf<CharacterResult?>(null)
 
     fun query(query: String) {
         characters.value = NetworkResult.Loading()
@@ -37,5 +40,14 @@ class MarvelApiRepo(private val api: MarvelApiInterface) {
                     }
                 }
             )
+    }
+
+    fun getSingleCharacter(id: Int?) {
+        id?.let {
+            characterDetails.value =
+                characters.value.data?.data?.results?.firstOrNull { character ->
+                    character.id == id
+                }
+        }
     }
 }
