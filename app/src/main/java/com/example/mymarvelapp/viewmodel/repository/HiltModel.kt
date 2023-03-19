@@ -3,6 +3,7 @@ package com.example.mymarvelapp.viewmodel.repository
 import android.content.Context
 import androidx.room.Room
 import com.example.mymarvelapp.data.network.MarvelApiService
+import com.example.mymarvelapp.model.connectivity.ConnectivityMonitor
 import com.example.mymarvelapp.model.db.*
 import com.example.mymarvelapp.model.db.Constants.DB
 import dagger.Module
@@ -30,5 +31,9 @@ class HiltModel {
     @Provides
     fun provideDbRepoImpl(characterDao: CharacterDao, noteDao: NoteDao): CollectionDbRepo =
         CollectionDbRepoImplementation(characterDao = characterDao, noteDao = noteDao)
+
+    @Provides
+    fun provideConnectivityManager(@ApplicationContext context: Context) =
+        ConnectivityMonitor.getInstance(context)
 
 }

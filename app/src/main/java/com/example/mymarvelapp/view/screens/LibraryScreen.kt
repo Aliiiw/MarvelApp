@@ -27,18 +27,19 @@ import androidx.navigation.NavHostController
 import com.example.mymarvelapp.data.Screen
 import com.example.mymarvelapp.data.network.NetworkResult
 import com.example.mymarvelapp.model.CharactersApiResponse
+import com.example.mymarvelapp.model.connectivity.ConnectivityObservable
 import com.example.mymarvelapp.utils.AttributionText
 import com.example.mymarvelapp.utils.CharacterImage
 import com.example.mymarvelapp.viewmodel.LibraryApiViewModel
 
 @Composable
 fun LibraryScreen(
-    navController: NavHostController,
-    vm: LibraryApiViewModel,
-    paddingValues: PaddingValues
+    navController: NavHostController, vm: LibraryApiViewModel, paddingValues: PaddingValues
 ) {
     val result by vm.result.collectAsState()
     val text = vm.queryText.collectAsState()
+    val networkAvailable =
+        vm.networkAvailable.observe().collectAsState(ConnectivityObservable.Status.AVAILABLE)
 
     Column(
         modifier = Modifier
@@ -46,6 +47,21 @@ fun LibraryScreen(
             .padding(bottom = paddingValues.calculateBottomPadding()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (networkAvailable.value == ConnectivityObservable.Status.UNAVAILABLE) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Red),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Network Unavailable",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
 
         OutlinedTextField(
             value = text.value,
@@ -84,13 +100,11 @@ fun LibraryScreen(
 
 @Composable
 fun ShowCharactersList(
-    result: NetworkResult<CharactersApiResponse>,
-    navController: NavHostController
+    result: NetworkResult<CharactersApiResponse>, navController: NavHostController
 ) {
     result.data?.data?.results?.let { characters ->
         LazyColumn(
-            modifier = Modifier.background(Color.LightGray),
-            verticalArrangement = Arrangement.Top
+            modifier = Modifier.background(Color.LightGray), verticalArrangement = Arrangement.Top
         ) {
             result.data.attributionText?.let {
                 item {
@@ -106,27 +120,26 @@ fun ShowCharactersList(
                 val context = LocalContext.current
                 val id = character.id
 
-                Column(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                        .background(Color.White)
-                        .padding(4.dp)
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .clickable {
-                            if (character.id != null)
-                                navController.navigate(Screen.CharacterDetail.createRoute(id))
-                            else
-                                Toast
-                                    .makeText(context, "Character id is null", Toast.LENGTH_SHORT)
-                                    .show()
-                        }
-                ) {
+                Column(modifier = Modifier
+                    .padding(4.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(Color.White)
+                    .padding(4.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .clickable {
+                        if (character.id != null) navController.navigate(
+                            Screen.CharacterDetail.createRoute(
+                                id
+                            )
+                        )
+                        else Toast
+                            .makeText(context, "Character id is null", Toast.LENGTH_SHORT)
+                            .show()
+                    }) {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         CharacterImage(
-                            url = imageUrl,
-                            modifier = Modifier
+                            url = imageUrl, modifier = Modifier
                                 .padding(4.dp)
                                 .width(100.dp)
                         )
