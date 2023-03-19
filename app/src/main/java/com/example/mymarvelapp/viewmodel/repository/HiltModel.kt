@@ -3,10 +3,7 @@ package com.example.mymarvelapp.viewmodel.repository
 import android.content.Context
 import androidx.room.Room
 import com.example.mymarvelapp.data.network.MarvelApiService
-import com.example.mymarvelapp.model.db.CharacterDao
-import com.example.mymarvelapp.model.db.CollectionDb
-import com.example.mymarvelapp.model.db.CollectionDbRepo
-import com.example.mymarvelapp.model.db.CollectionDbRepoImplementation
+import com.example.mymarvelapp.model.db.*
 import com.example.mymarvelapp.model.db.Constants.DB
 import dagger.Module
 import dagger.Provides
@@ -25,11 +22,13 @@ class HiltModel {
         Room.databaseBuilder(context, CollectionDb::class.java, DB).build()
 
     @Provides
-    fun provideCharacterDao(collectionDb: CollectionDb) = collectionDb.characterDap()
+    fun provideCharacterDao(collectionDb: CollectionDb) = collectionDb.characterDao()
 
     @Provides
-    fun provideDbRepoImpl(characterDao: CharacterDao): CollectionDbRepo =
-        CollectionDbRepoImplementation(characterDao = characterDao)
+    fun provideNoteDao(collectionDb: CollectionDb) = collectionDb.noteDao()
 
+    @Provides
+    fun provideDbRepoImpl(characterDao: CharacterDao, noteDao: NoteDao): CollectionDbRepo =
+        CollectionDbRepoImplementation(characterDao = characterDao, noteDao = noteDao)
 
 }
